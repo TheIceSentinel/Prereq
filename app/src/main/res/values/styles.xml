@@ -15,9 +15,29 @@
 
         <!--<item name="android:radius">10dp</item>-->
         <!--<item name="android:strokeWidth">2dp</item>-->
-        <item name="android:strokeColor">@color/colorAccent</item>
+        <!--<item name="android:strokeColor">@color/colorAccent</item>-->
         <item name="android:background">@drawable/input_field</item>
 
+
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">8pt</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+
+        <!--<item name="android:radius">10dp</item>-->
+        <!--<item name="android:strokeWidth">2dp</item>-->
+        <!--<item name="android:strokeColor">@color/colorAccent</item>-->
+        <item name="android:background">@drawable/button</item>
 
         <item name="android:paddingLeft">10dp</item>
         <item name="android:paddingRight">10dp</item>

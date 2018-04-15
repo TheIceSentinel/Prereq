@@ -77,29 +77,19 @@
 
             <Button
                 android:id="@+id/login_button"
-                style="?android:textAppearanceInverse"
+                style="@style/Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
-                android:text="@string/action_login"
-                android:textStyle="bold"
-                android:textSize="8pt"
-                android:background="@drawable/button"/>
+                android:text="@string/action_login" />
 
             <Button
                 android:id="@+id/sign_up_button"
-                style="?android:textAppearanceInverse"
+                style="@style/Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_gravity="center"
-                android:text="@string/action_sign_up"
-                android:textStyle="bold"
-                android:textSize="8pt"
-                android:background="@drawable/button"/>
+                android:text="@string/action_sign_up" />
 
         </LinearLayout>
     </ScrollView>
