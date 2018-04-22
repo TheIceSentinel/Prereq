@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.StrictMode;
+import android.sax.StartElementListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +33,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,8 +68,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private UserLoginTask authTask = null;
 
     // UI references.
-    private AutoCompleteTextView emailView;
-    private EditText passwordView;
+    private AutoCompleteTextView emailText;
+    private EditText passwordText;
     private View progressView;
     private View loginFormView;
 
@@ -70,11 +79,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         // Set up the login form.
-        emailView = (AutoCompleteTextView) findViewById(R.id.email);
+        emailText = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        passwordText = (EditText) findViewById(R.id.password);
 
-        passwordView = (EditText) findViewById(R.id.password);
-        passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        // OnEditorActionListener that checks if user presses the Done button on keyboard
+        passwordText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
@@ -124,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(emailView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(emailText, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -142,7 +152,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Callback received when a permissions request has been completed.
      */
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
             if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -153,41 +164,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
+     * Attempts to sign in the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
+        // Check to see if the authTask is already running
         if (authTask != null) {
             return;
         }
 
         // Reset errors.
-        emailView.setError(null);
-        passwordView.setError(null);
+        emailText.setError(null);
+        passwordText.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = emailView.getText().toString();
-        String password = passwordView.getText().toString();
+        String email = emailText.getText().toString();
+        String password = passwordText.getText().toString();
 
+        // Create a View to set the focus on if an error is made
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            passwordView.setError(getString(R.string.error_invalid_password));
-            focusView = passwordView;
+            passwordText.setError(getString(R.string.error_invalid_password));
+            focusView = passwordText;
             cancel = true;
         }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
-            emailView.setError(getString(R.string.error_field_required));
-            focusView = emailView;
+            emailText.setError(getString(R.string.error_field_required));
+            focusView = emailText;
             cancel = true;
         } else if (!isEmailValid(email)) {
-            emailView.setError(getString(R.string.error_invalid_email));
-            focusView = emailView;
+            emailText.setError(getString(R.string.error_invalid_email));
+            focusView = emailText;
             cancel = true;
         }
 
@@ -196,9 +209,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // form field with an error.
             focusView.requestFocus();
         } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
+            // Kick off a background task to perform the user login attempt.
             authTask = new UserLoginTask(email, password);
             authTask.execute((Void) null);
         }
@@ -218,10 +229,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Shows the progress UI and hides the login form.
+     * This section was auto-created by template from AndroidStudio
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {
         // TODO: Remove Login animations API calls, beyond scope
+        // TODO: Ask Taha about keeping Login animation API
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.
@@ -252,6 +265,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             loginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
+
+    // BEGIN OF AUTOCOMPLETE LOADER
+    // TODO: Ask if AutoComplete Loader is OKAY to keep
 
     // TODO: Figure out what onCreateLoader is
     @Override
@@ -295,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        emailView.setAdapter(adapter);
+        emailText.setAdapter(adapter);
     }
 
 
@@ -309,6 +325,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+    // END OF AUTOCOMPLETE LOADER
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -317,53 +335,116 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String email;
         private final String password;
+        private Boolean hasDegree;
 
+        // Constructor
         UserLoginTask(String email, String password) {
             this.email = email;
             this.password = password;
         }
 
         @Override
-        protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
+        protected void onPreExecute() {
+            // Display the progress animation to give user feedback.
+            showProgress(true);
+        }
 
+        @Override
+        protected Boolean doInBackground(Void... params) {
             try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                Connection connection = connection();
+                if(connection == null) return false;
+                else {
+                    String sql =
+                            "SELECT s.CWID, s.Password, sd.DegreeID " +
+                            "FROM Student s " +
+                            "LEFT JOIN Student_Degree sd " +
+                            "ON sd.CWID = s.CWID " +
+                            "WHERE s.Email = '" + email + "';";
+                    ResultSet resultSet = connection.createStatement().executeQuery(sql);
+
+                    // read through resultSet
+                    if(resultSet.next() && resultSet.getString("Password").equals(password)) {
+                        // Check to see if the user has selected a Degree
+                        // meaning they have a non-null entry in DegreeID
+                        if(resultSet.getString("DegreeID") == null) {
+                            hasDegree = false;
+                        }
+                        else {
+                            hasDegree = true;
+                        }
+                        connection.close();
+                        return true;
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(email)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(password);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            // Default return of false
+            return false;
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
+            // Once done, null task and hide progress bar
             authTask = null;
             showProgress(false);
 
             if (success) {
                 finish();
+
+                if(hasDegree) {
+                    Intent i1 = new Intent(LoginActivity.this, NextCoursesActivity.class);
+                    i1.putExtra("UserEmail", email);
+                    startActivity(i1);
+                }
+                else {
+                    Intent i2 = new Intent(LoginActivity.this, DegreePickerActivity.class);
+                    i2.putExtra("UserEmail", email);
+                    startActivity(i2);
+                }
+
             } else {
-                passwordView.setError(getString(R.string.error_incorrect_password));
-                passwordView.requestFocus();
+                passwordText.setError(getString(R.string.error_incorrect_password));
+                passwordText.requestFocus();
             }
         }
 
         @Override
         protected void onCancelled() {
+            // If cancelled, null task and hide progress bar
             authTask = null;
             showProgress(false);
         }
+    }
+
+    public Connection connection() {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        Connection connection = null;
+        String ConnectionURL;
+
+        try {
+            Class.forName("net.sourceforge.jtds.jdbc.Driver");
+            ConnectionURL = "jdbc:jtds:sqlserver://novatulsa.database.windows.net:1433;" +
+                    "DatabaseName=Catalog;" +
+                    "user=jdoty@novatulsa;" +
+                    "password=3Ecfsd%Tbhfg&Umkhj9;" +
+                    "encrypt=true;" +
+                    "trustServerCertificate=false;" +
+                    "hostNameInCertificate=*.database.windows.net;" +
+                    "loginTimeout=30;";
+            connection = DriverManager.getConnection(ConnectionURL);
+        } catch (ClassNotFoundException e) {
+            Log.e("Error 1: ", e.getMessage());
+        } catch (SQLException e) {
+            Log.e("Error 2: ", e.getMessage());
+        } catch (Exception e) {
+            Log.e("Error 3: ", e.getMessage());
+        }
+        return connection;
     }
 }
 
