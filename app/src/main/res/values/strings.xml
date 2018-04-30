@@ -6,6 +6,7 @@
     <string name="prompt_password">Password</string>
     <string name="prompt_create_pass">Create Password</string>
     <string name="prompt_confirm_pass">Confirm Password</string>
+    <string name="prompt_course_select">Select completed courses</string>
     <string name="action_login">Log In</string>
     <string name="action_sign_up">Sign Up</string>
     <string name="error_invalid_email">This email address is invalid</string>
