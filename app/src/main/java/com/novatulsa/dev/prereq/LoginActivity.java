@@ -386,14 +386,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 finish();
 
                 if(hasDegree) {
-                    Intent i1 = new Intent(LoginActivity.this, NextCoursesActivity.class);
-                    i1.putExtra("UserEmail", email);
-                    startActivity(i1);
+                    Intent i = new Intent(LoginActivity.this, NextCoursesActivity.class);
+                    i.putExtra("UserEmail", email);
+                    startActivity(i);
                 }
                 else {
-                    Intent i2 = new Intent(LoginActivity.this, DegreePickerActivity.class);
-                    i2.putExtra("UserEmail", email);
-                    startActivity(i2);
+                    Intent i = new Intent(LoginActivity.this, DegreePickerActivity.class);
+                    i.putExtra("UserEmail", email);
+                    startActivity(i);
                 }
 
             } else {
