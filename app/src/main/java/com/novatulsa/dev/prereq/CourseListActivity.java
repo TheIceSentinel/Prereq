@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import java.sql.Connection;
@@ -20,14 +19,17 @@ import java.util.ArrayList;
 
 public class CourseListActivity extends AppCompatActivity {
 
+    // User variables
+    private static String USER_EMAIL;
+    private static int CWID;
+
     // Arrays and Lists
-    private GetCourseTask fetchTask = null;
+    private CourseListTask fetchTask = null;
     private ArrayAdapter<String> courseAdapter;
     public ArrayList<String> fetchedCourse;
     public ArrayList<String> selectedCourse;
 
     // UI References
-    // TODO: Add buttons to XML layout
     private ListView courseListView;
     private Button btnConfirm;
     private Button btnCancel;
@@ -38,7 +40,8 @@ public class CourseListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course_list);
 
         // Setup user information from Intent
-        final String USER_EMAIL = getIntent().getStringExtra("UserEmail");
+        USER_EMAIL = getIntent().getStringExtra("UserEmail");
+        CWID = getIntent().getIntExtra("CWID", 0);
 
         // Initialize Arrays and Adapters
         fetchedCourse = new ArrayList<String>();
@@ -57,6 +60,7 @@ public class CourseListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
                 intent.putExtra("UserEmail", USER_EMAIL);
+                intent.putExtra("CWID", CWID);
                 startActivity(intent);
             }
         });
@@ -66,24 +70,25 @@ public class CourseListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
                 intent.putExtra("UserEmail", USER_EMAIL);
+                intent.putExtra("CWID", CWID);
                 startActivity(intent);
             }
         });
 
-        fetchTask = new GetCourseTask(USER_EMAIL);
+        fetchTask = new CourseListTask(CWID);
         fetchTask.execute();
     }
 
     /**
      * Asynchronous SELECT task to populate the ListView.
      */
-    public class GetCourseTask extends AsyncTask<Void, Void, Boolean> {
+    public class CourseListTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String email;
+        private final int cwid;
 
         // Constructor
-        GetCourseTask(String email) {
-            this.email = email;
+        CourseListTask(int cwid) {
+            this.cwid = CWID;
         }
 
         @Override
@@ -93,15 +98,12 @@ public class CourseListActivity extends AppCompatActivity {
                 if (connection == null) return false;
                 else {
                     String sql =
-                            "SELECT CourseID, CourseName " +
-                            "FROM Course " +
-                            "WHERE CourseID NOT IN (" +
-                                "SELECT CourseID " +
-                                "FROM Student_Course " +
-                                "WHERE CWID = (" +
-                                    "SELECT CWID " +
-                                    "FROM Student " +
-                                    "WHERE Email = '" + email + "'));";
+                        "SELECT CourseID, CourseName " +
+                        "FROM Course " +
+                        "WHERE CourseID NOT IN (" +
+                            "SELECT CourseID " +
+                            "FROM Student_Course " +
+                            "WHERE CWID = " + cwid + ");";
                     ResultSet resultSet = connection.createStatement().executeQuery(sql);
 
                     // Read through resultSet
@@ -130,11 +132,8 @@ public class CourseListActivity extends AppCompatActivity {
             fetchTask = null;
 
             if (success) {
-                courseAdapter.notifyDataSetChanged();
                 finish();
-            }
-            else {
-                fetchedCourse.add("Error loading courses");
+                courseAdapter.notifyDataSetChanged();
             }
         }
 

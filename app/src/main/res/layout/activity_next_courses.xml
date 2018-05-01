@@ -32,12 +32,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:elevation="2dp"
         android:text="@string/title_next_course_list" />
 
     <ListView
+        android:id="@+id/nextCourseList"
         android:layout_width="match_parent"
         android:layout_weight="1.04"
-        android:id="@+id/toTakeList"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_height="0dp" />
@@ -48,7 +49,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_add_circle_outline_black_24dp"
-        app:srcCompat="@android:drawable/ic_menu_info_details" />
+        android:elevation="8dp"
+        app:backgroundTint="@color/colorPrimary"
+        android:src="@drawable/ic_add_fab" />
 
 </LinearLayout>

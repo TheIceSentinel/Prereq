@@ -6,13 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <CheckedTextView
+    <TextView
         android:id="@+id/courseItem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:textColor="@color/colorPrimary"
-        android:text="CheckedTextView" />
+        android:text="Lorem Ipsum" />
 
 </android.support.constraint.ConstraintLayout>

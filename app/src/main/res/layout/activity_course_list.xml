@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
+        android:elevation="2dp"
         android:text="@string/prompt_course_select" />
 
     <ListView
@@ -40,12 +41,13 @@
         android:layout_weight="1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="150dp" />
+        android:layout_height="0dp" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:elevation="8dp"
         style="@style/Button">
 
         <TextView
@@ -58,14 +60,14 @@
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:text="Y"
             android:gravity="center" />
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="wrap_content"
+            android:layout_width="56dp"
             android:layout_height="wrap_content"
             android:text="N"
             android:gravity="center" />

@@ -322,6 +322,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         private final String email;
         private final String password;
+        private int cwid;
         private Boolean hasDegree;
 
         // Constructor
@@ -352,6 +353,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     // read through resultSet
                     if(resultSet.next() && resultSet.getString("Password").equals(password)) {
+                        cwid = resultSet.getInt(1);
+                        
                         // Check to see if the user has selected a Degree
                         // meaning they have a non-null entry in DegreeID
                         if(resultSet.getString("DegreeID") == null) {
@@ -385,12 +388,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 if(hasDegree) {
                     intent = new Intent(LoginActivity.this, NextCourseActivity.class);
-                    intent.putExtra("UserEmail", email);
                 }
                 else {
                     intent = new Intent(LoginActivity.this, DegreePickerActivity.class);
-                    intent.putExtra("UserEmail", email);
                 }
+                intent.putExtra("CWID", cwid);
+                intent.putExtra("UserEmail", email);
+                // Extra for DegreeID or DegreeName here
 
                 startActivity(intent);
             }
