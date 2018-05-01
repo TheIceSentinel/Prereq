@@ -147,22 +147,20 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isEmailValid(String email) {
-        // Replace this with your own logic
         return (email.contains("@okstate.edu")
                 && email.length() <= 50);
     }
 
     private boolean isPasswordValid(String password) {
-        // Replace this with your own logic
-        return (password.length() > 8
-                && password.length() < 26
+        // TODO: make it allow any characters between
+        return (password.length() >= 8
+                && password.length() <= 25
                 && password.matches("[a-z]+")
                 && password.matches("[A-Z]+")
                 && password.matches("[0-9]+"));
     }
 
     private boolean isNameValid(String name) {
-        // Replace this with your own logic
         return (name.length() <= 50
                 && name.matches("[a-zA-Z]+"));
     }
