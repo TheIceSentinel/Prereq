@@ -154,10 +154,10 @@ public class RegisterActivity extends AppCompatActivity {
     private boolean isPasswordValid(String password) {
         // TODO: make it allow any characters between
         return (password.length() >= 8
-                && password.length() <= 25
-                && password.matches("[a-z]+")
-                && password.matches("[A-Z]+")
-                && password.matches("[0-9]+"));
+                && password.length() <= 25);
+//                && password.matches("(.*[a-z])")
+//                && password.matches("(?=.*[A-Z])")
+//                && password.matches("(?=.*[0-9])"));
     }
 
     private boolean isNameValid(String name) {
