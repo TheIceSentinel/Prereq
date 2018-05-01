@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -82,15 +80,17 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Check to make sure password fields match each other
         // and for a valid password, if the user entered one.
-        if (confirmPass.equals(createPass)) {
-            confirmPassText.setError(getString(R.string.error_invalid_password)); //change error
-            focusView = confirmPassText;
-            cancel = true;
-        } else if (!TextUtils.isEmpty(confirmPass)) {
+
+        if (TextUtils.isEmpty(confirmPass)) {
             confirmPassText.setError(getString(R.string.error_field_required));
             focusView = confirmPassText;
             cancel = true;
-        } else if (!TextUtils.isEmpty(createPass)) {
+        } else if (!confirmPass.equals(createPass)) {
+            confirmPassText.setError(getString(R.string.error_password_match)); //change error
+            focusView = confirmPassText;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(createPass)) {
             createPassText.setError(getString(R.string.error_field_required));
             focusView = createPassText;
             cancel = true;
@@ -101,7 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         // Check for a valid email address.
-        if (!TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(email)) {
             emailText.setError(getString(R.string.error_field_required));
             focusView = emailText;
             cancel = true;
@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Check for a valid first name, if user entered one. (<=50)
         if (!TextUtils.isEmpty(firstName)) {
             if (!isNameValid(firstName)) {
-                firstNameText.setError(getString(R.string.error_invalid_password)); // change error
+                firstNameText.setError(getString(R.string.error_invalid_name)); // change error
                 focusView = firstNameText;
                 cancel = true;
             }
@@ -123,7 +123,7 @@ public class RegisterActivity extends AppCompatActivity {
         // Check for a valid last name, if user entered one. (<=50)
         if (!TextUtils.isEmpty(lastName)) {
             if (!isNameValid(lastName)) {
-                lastNameText.setError(getString(R.string.error_invalid_password)); // change error
+                lastNameText.setError(getString(R.string.error_invalid_name)); // change error
                 focusView = lastNameText;
                 cancel = true;
             }
@@ -158,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isNameValid(String name) {
         // Replace this with your own logic
-        return (name.length() <= 50 && name.matches("[a-zA-Z]"));
+        return (name.length() <= 50 && name.matches("[a-zA-Z]+"));
     }
 
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
