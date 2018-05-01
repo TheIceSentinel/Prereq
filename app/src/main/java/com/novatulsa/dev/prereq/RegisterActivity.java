@@ -1,5 +1,6 @@
 package com.novatulsa.dev.prereq;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -41,12 +43,10 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPassText = (EditText) findViewById(R.id.confirmPass);
         btnSignUp = (Button) findViewById(R.id.sign_up_button);
 
-
     }
 
     public void onSignUpClick(View view) {
-        // run UserRegisterTask
-        // transfer Intent to LoginActivity
+        attemptRegister();
     }
 
     /**
@@ -145,7 +145,6 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    //TODO: Update Email field validator
     private boolean isEmailValid(String email) {
         // Replace this with your own logic
         return email.contains("@okstate.edu");
@@ -157,7 +156,6 @@ public class RegisterActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
-    //TODO: Update Password validator
     private boolean isNameValid(String name) {
         // Replace this with your own logic
         return (name.length() <= 50 && name.matches("[a-zA-Z]"));
@@ -192,7 +190,18 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return null;
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            registerTask = null;
+            if (success) {
+                finish();
+                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            } else {
+                Toast.makeText(getApplicationContext(), "Registration attempt failed", Toast.LENGTH_LONG).show();
+            }
         }
     }
 
