@@ -205,16 +205,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    //TODO: Update Email field validator
     private boolean isEmailValid(String email) {
         // Replace this with your own logic
-        return email.contains("@");
+        return (email.contains("@okstate.edu")
+                && email.length() <= 50);
     }
 
-    //TODO: Update Password validator
     private boolean isPasswordValid(String password) {
         // Replace this with your own logic
-        return password.length() > 4;
+        return (password.length() > 8
+                && password.length() < 26
+                && password.matches("[a-z]+")
+                && password.matches("[A-Z]+")
+                && password.matches("[0-9]+"));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.novatulsa.dev.prereq;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -16,6 +17,7 @@ import org.w3c.dom.Text;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -147,18 +149,23 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String email) {
         // Replace this with your own logic
-        return email.contains("@okstate.edu");
+        return (email.contains("@okstate.edu")
+                && email.length() <= 50);
     }
 
-    //TODO: Update Password validator
     private boolean isPasswordValid(String password) {
         // Replace this with your own logic
-        return password.length() > 4;
+        return (password.length() > 8
+                && password.length() < 26
+                && password.matches("[a-z]+")
+                && password.matches("[A-Z]+")
+                && password.matches("[0-9]+"));
     }
 
     private boolean isNameValid(String name) {
         // Replace this with your own logic
-        return (name.length() <= 50 && name.matches("[a-zA-Z]"));
+        return (name.length() <= 50
+                && name.matches("[a-zA-Z]"));
     }
 
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
@@ -190,7 +197,45 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            return true;
+            try {
+                Connection connection = connection();
+                if(connection == null) {
+                    return false;
+                } else if (!TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName)) {
+                    // All fields provided
+                    String sql = "INSERT INTO Student (Email, Password, FirstName, LastName) " +
+                            "VALUES (" + email +
+                            ", " + password +
+                            ", " + firstName +
+                            ", " + lastName +
+                            ");";
+                    connection.createStatement().executeUpdate(sql);
+                    connection.close();
+                    return true;
+                } else if (!TextUtils.isEmpty(firstName) && TextUtils.isEmpty(lastName)) {
+                    // No last name provided
+                    String sql = "INSERT INTO Student (Email, Password, FirstName) " +
+                            "VALUES (" + email +
+                            ", " + password +
+                            ", " + firstName +
+                            ");";
+                    connection.createStatement().executeUpdate(sql);
+                    connection.close();
+                    return true;
+                } else {
+                    // Default (no names provided)
+                    String sql = "INSERT INTO Student (Email, Password) " +
+                            "VALUES (" + email +
+                            ", " + password +
+                            ");";
+                    connection.createStatement().executeUpdate(sql);
+                    connection.close();
+                    return true;
+                }
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+                return false;
+            }
         }
 
         @Override
@@ -198,6 +243,7 @@ public class RegisterActivity extends AppCompatActivity {
             registerTask = null;
             if (success) {
                 finish();
+                Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             } else {
                 Toast.makeText(getApplicationContext(), "Registration attempt failed", Toast.LENGTH_LONG).show();

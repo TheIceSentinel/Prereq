@@ -8,7 +8,6 @@
     <string name="prompt_confirm_pass">Confirm Password</string>
     <string name="prompt_course_select">Select completed courses</string>
     <string name="prompt_add_course">Add courses?</string>
-
     <string name="prompt_first_name">First Name</string>
     <string name="prompt_last_name">Last Name</string>
 
@@ -16,7 +15,7 @@
     <string name="action_sign_up">Sign Up</string>
 
     <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_invalid_password">Password must be 8-25 characters</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="error_password_match">Passwords do not match</string>
