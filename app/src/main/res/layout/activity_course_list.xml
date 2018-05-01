@@ -27,7 +27,7 @@
         <!--tools:ignore="contentDescription" />-->
 
     <TextView
-        android:id="@+id/txtNextCourses"
+        android:id="@+id/txtListHeader"
         style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -35,11 +35,41 @@
         android:text="@string/prompt_course_select" />
 
     <ListView
-        android:layout_width="match_parent"
-        android:layout_weight="1.04"
         android:id="@+id/completeCourseList"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="0dp" />
+        android:layout_height="150dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@style/Button">
+
+        <TextView
+            android:id="@+id/txtCoursePrompt"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/prompt_add_course"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/confirm_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Y"
+            android:gravity="center" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N"
+            android:gravity="center" />
+
+    </LinearLayout>
 
 </LinearLayout>

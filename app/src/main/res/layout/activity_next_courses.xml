@@ -9,7 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".NextCoursesActivity"
+    tools:context=".NextCourseActivity"
     android:id="@+id/activity_next_courses"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:text="Your course suggestions:" />
+        android:text="@string/title_next_course_list" />
 
     <ListView
         android:layout_width="match_parent"
@@ -40,10 +40,10 @@
         android:id="@+id/toTakeList"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fabAddCourse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

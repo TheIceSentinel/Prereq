@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.StrictMode;
-import android.sax.StartElementListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -34,11 +33,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         });
 
         // OnClickListener that starts the RegisterActivity
-        Button signUpButton = (Button) findViewById(R.id.sign_up_button);
+        final Button signUpButton = (Button) findViewById(R.id.sign_up_button);
         signUpButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -384,19 +381,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 finish();
+                Intent intent;
 
                 if(hasDegree) {
-                    Intent i = new Intent(LoginActivity.this, NextCoursesActivity.class);
-                    i.putExtra("UserEmail", email);
-                    startActivity(i);
+                    intent = new Intent(LoginActivity.this, NextCourseActivity.class);
+                    intent.putExtra("UserEmail", email);
                 }
                 else {
-                    Intent i = new Intent(LoginActivity.this, DegreePickerActivity.class);
-                    i.putExtra("UserEmail", email);
-                    startActivity(i);
+                    intent = new Intent(LoginActivity.this, DegreePickerActivity.class);
+                    intent.putExtra("UserEmail", email);
                 }
 
-            } else {
+                startActivity(intent);
+            }
+            else {
                 passwordText.setError(getString(R.string.error_incorrect_password));
                 passwordText.requestFocus();
             }

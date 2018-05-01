@@ -12,19 +12,24 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class NextCoursesActivity extends AppCompatActivity {
+public class NextCourseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next_courses);
 
+        // Setup user information from Intent
+        final String USER_EMAIL = getIntent().getStringExtra("UserEmail");
+
         // OnClickListener that starts the CourseListActivity to return to adding classes
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabAddCourse);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(NextCoursesActivity.this, CourseListActivity.class));
+                Intent intent = new Intent(NextCourseActivity.this, CourseListActivity.class);
+                intent.putExtra("UserEmail", USER_EMAIL);
+                startActivity(intent);
             }
         });
     }

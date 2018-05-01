@@ -1,28 +1,77 @@
 package com.novatulsa.dev.prereq;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckedTextView;
 import android.widget.ListView;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class CourseListActivity extends AppCompatActivity {
 
+    // Arrays and Lists
     private GetCourseTask fetchTask = null;
+    private ArrayAdapter<String> courseAdapter;
+    public ArrayList<String> fetchedCourse;
+    public ArrayList<String> selectedCourse;
 
     // UI References
-    private ListView classListView = (ListView) findViewById(R.id.completeCourseList);
+    // TODO: Add buttons to XML layout
+    private ListView courseListView;
+    private Button btnConfirm;
+    private Button btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_list);
+
+        // Setup user information from Intent
+        final String USER_EMAIL = getIntent().getStringExtra("UserEmail");
+
+        // Initialize Arrays and Adapters
+        fetchedCourse = new ArrayList<String>();
+        selectedCourse = new ArrayList<String>();
+        courseAdapter = new ArrayAdapter<String>(this, R.layout.course_item, R.id.courseItem, fetchedCourse);
+
+        // Initialize UI elements
+        courseListView = (ListView) findViewById(R.id.completeCourseList);
+        courseListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        courseListView.setAdapter(courseAdapter);
+
+        // OnClickListeners for bottom menu buttons
+        btnConfirm = (Button) findViewById(R.id.confirm_button);
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
+                intent.putExtra("UserEmail", USER_EMAIL);
+                startActivity(intent);
+            }
+        });
+        btnCancel = (Button) findViewById(R.id.cancel_button);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
+                intent.putExtra("UserEmail", USER_EMAIL);
+                startActivity(intent);
+            }
+        });
+
+        fetchTask = new GetCourseTask(USER_EMAIL);
+        fetchTask.execute();
     }
 
     /**
@@ -31,19 +80,17 @@ public class CourseListActivity extends AppCompatActivity {
     public class GetCourseTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String email;
-        // private final String degree;
 
         // Constructor
-        GetCourseTask(String email, String password) {
+        GetCourseTask(String email) {
             this.email = email;
-            // this.degree = degree;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
                 Connection connection = connection();
-                if(connection == null) return false;
+                if (connection == null) return false;
                 else {
                     String sql =
                             "SELECT CourseID, CourseName " +
@@ -57,12 +104,16 @@ public class CourseListActivity extends AppCompatActivity {
                                     "WHERE Email = '" + email + "'));";
                     ResultSet resultSet = connection.createStatement().executeQuery(sql);
 
-                    // read through resultSet
-                    if(resultSet.next()) {
-                        //
-                        connection.close();
-                        return true;
+                    // Read through resultSet
+                    while (resultSet.next()) {
+                        // TODO: Update this or move it to a Course class later
+                        // CourseID + " " + CourseName
+                        String courseRow = resultSet.getString(1) + " " + resultSet.getString(2);
+                        fetchedCourse.add(courseRow);
                     }
+
+                    // Close connection after data is read
+                    connection.close();
                 }
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
@@ -75,13 +126,15 @@ public class CourseListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            // Once done, null task and hide progress bar
+            // Once done, null task (opt. remove progress)
             fetchTask = null;
 
             if (success) {
+                courseAdapter.notifyDataSetChanged();
                 finish();
-            } else {
-                // WHEN COURSE LIST CANNOT BE RETRIEVED
+            }
+            else {
+                fetchedCourse.add("Error loading courses");
             }
         }
 
