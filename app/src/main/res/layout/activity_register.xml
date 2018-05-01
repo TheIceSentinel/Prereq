@@ -17,10 +17,10 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="15dp"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         app:srcCompat="@drawable/osu" />
 
     <EditText
@@ -31,18 +31,6 @@
         android:hint="First Name"
         android:inputType="textPersonName" />
 
-    <!--<TextView-->
-    <!--android:text="FIRST NAME"-->
-    <!--android:labelFor="@+id/firstName"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textSize="14sp"-->
-    <!--android:gravity="center"-->
-    <!--tools:textColor="?android:attr/colorActivatedHighlight"-->
-    <!--android:textColor="?android:attr/colorFocusedHighlight"-->
-    <!--tools:textStyle="bold"-->
-    <!--android:textStyle="normal|bold" />-->
-
     <EditText
         android:id="@+id/lastName"
         style="@style/InputField"
@@ -50,18 +38,6 @@
         android:layout_height="wrap_content"
         android:hint="Last Name"
         android:inputType="textPersonName" />
-
-    <!--<TextView-->
-    <!--android:text="LAST NAME"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textSize="14sp"-->
-    <!--android:gravity="center"-->
-    <!--tools:textColor="?android:attr/colorActivatedHighlight"-->
-    <!--android:textColor="?android:attr/colorFocusedHighlight"-->
-    <!--tools:textStyle="bold"-->
-    <!--android:textStyle="normal|bold" />-->
-
 
     <EditText
         android:id="@+id/email"
@@ -71,17 +47,6 @@
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress" />
 
-    <!--<TextView-->
-    <!--android:text="USERNAME"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:textSize="14sp"-->
-    <!--android:gravity="center"-->
-    <!--tools:textColor="?android:attr/colorActivatedHighlight"-->
-    <!--android:textColor="?android:attr/colorFocusedHighlight"-->
-    <!--tools:textStyle="bold"-->
-    <!--android:textStyle="normal|bold" />-->
-
     <EditText
         android:id="@+id/createPass"
         style="@style/InputField"
@@ -90,16 +55,6 @@
         android:hint="@string/prompt_create_pass"
         android:inputType="textPassword" />
 
-    <!--<TextView-->
-    <!--android:text="PASSWORD"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/text"-->
-    <!--android:gravity="center"-->
-    <!--android:textSize="14sp"-->
-    <!--android:textColor="?android:attr/colorFocusedHighlight"-->
-    <!--android:textStyle="bold" />-->
-
     <EditText
         android:id="@+id/confirmPass"
         style="@style/InputField"
@@ -107,17 +62,6 @@
         android:layout_height="wrap_content"
         android:hint="@string/prompt_confirm_pass"
         android:inputType="textPassword" />
-
-    <!--<TextView-->
-    <!--android:text="REPEAT PASSWORD"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/textView2"-->
-    <!--android:gravity="center"-->
-    <!--android:textSize="14sp"-->
-    <!--android:textColor="?android:attr/colorFocusedHighlight"-->
-    <!--android:textStyle="bold" />-->
-
 
     <Button
         android:id="@+id/sign_up_button"

@@ -4,8 +4,13 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+import org.w3c.dom.Text;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,10 +18,30 @@ import java.sql.SQLException;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    // UI References
+    private EditText firstNameText;
+    private EditText lastNameText;
+    private EditText emailText;
+    private EditText createPassText;
+    private EditText confirmPassText;
+    private Button btnSignUp;
+
+    private UserRegisterTask registerTask = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Setup UI elements
+        firstNameText = (EditText) findViewById(R.id.firstName);
+        lastNameText = (EditText) findViewById(R.id.lastName);
+        emailText = (EditText) findViewById(R.id.email);
+        createPassText = (EditText) findViewById(R.id.createPass);
+        confirmPassText = (EditText) findViewById(R.id.confirmPass);
+        btnSignUp = (Button) findViewById(R.id.sign_up_button);
+
+
     }
 
     public void onSignUpClick(View view) {
@@ -24,8 +49,146 @@ public class RegisterActivity extends AppCompatActivity {
         // transfer Intent to LoginActivity
     }
 
+    /**
+     * Attempts to register the user using the info specified by the form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no registration attempt is made.
+     */
+    private void attemptRegister() {
+        // Check to see if the registerTask is already running
+        if (registerTask != null) {
+            return;
+        }
+
+        // Reset errors.
+        firstNameText.setError(null);
+        lastNameText.setError(null);
+        emailText.setError(null);
+        createPassText.setError(null);
+        confirmPassText.setError(null);
+
+        // Store values at the time of the registration attempt.
+        String firstName = firstNameText.getText().toString();
+        String lastName = lastNameText.getText().toString();
+        String email = emailText.getText().toString();
+        String createPass = createPassText.getText().toString();
+        String confirmPass = confirmPassText.getText().toString();
+
+        // Create a View to set the focus on if an error is made
+        boolean cancel = false;
+        View focusView = null;
+
+        // Validate user input, working from bottom to top.
+
+        // Check to make sure password fields match each other
+        // and for a valid password, if the user entered one.
+        if (confirmPass.equals(createPass)) {
+            confirmPassText.setError(getString(R.string.error_invalid_password)); //change error
+            focusView = confirmPassText;
+            cancel = true;
+        } else if (!TextUtils.isEmpty(confirmPass)) {
+            confirmPassText.setError(getString(R.string.error_field_required));
+            focusView = confirmPassText;
+            cancel = true;
+        } else if (!TextUtils.isEmpty(createPass)) {
+            createPassText.setError(getString(R.string.error_field_required));
+            focusView = createPassText;
+            cancel = true;
+        } else if (!isPasswordValid(createPass)) {
+            createPassText.setError(getString(R.string.error_invalid_password));
+            focusView = createPassText;
+            cancel = true;
+        }
+
+        // Check for a valid email address.
+        if (!TextUtils.isEmpty(email)) {
+            emailText.setError(getString(R.string.error_field_required));
+            focusView = emailText;
+            cancel = true;
+        } else if (!isEmailValid(email)) {
+            emailText.setError(getString(R.string.error_invalid_email));
+            focusView = emailText;
+            cancel = true;
+        }
+
+        // Check for a valid first name, if user entered one. (<=50)
+        if (!TextUtils.isEmpty(firstName)) {
+            if (!isNameValid(firstName)) {
+                firstNameText.setError(getString(R.string.error_invalid_password)); // change error
+                focusView = firstNameText;
+                cancel = true;
+            }
+        }
+
+        // Check for a valid last name, if user entered one. (<=50)
+        if (!TextUtils.isEmpty(lastName)) {
+            if (!isNameValid(lastName)) {
+                lastNameText.setError(getString(R.string.error_invalid_password)); // change error
+                focusView = lastNameText;
+                cancel = true;
+            }
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else if (TextUtils.isEmpty(firstName) && TextUtils.isEmpty(lastName)) {
+            registerTask = new UserRegisterTask(email, createPass);
+            registerTask.execute((Void) null);
+        } else if (!TextUtils.isEmpty(firstName) && TextUtils.isEmpty(lastName)) {
+            registerTask = new UserRegisterTask(firstName, email, createPass);
+            registerTask.execute((Void) null);
+        } else if (!TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName)) {
+            registerTask = new UserRegisterTask(firstName, lastName, email, createPass);
+            registerTask.execute((Void) null);
+        }
+    }
+
+    //TODO: Update Email field validator
+    private boolean isEmailValid(String email) {
+        // Replace this with your own logic
+        return email.contains("@okstate.edu");
+    }
+
+    //TODO: Update Password validator
+    private boolean isPasswordValid(String password) {
+        // Replace this with your own logic
+        return password.length() > 4;
+    }
+
+    //TODO: Update Password validator
+    private boolean isNameValid(String name) {
+        // Replace this with your own logic
+        return (name.length() <= 50 && name.matches("[a-zA-Z]"));
+    }
+
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
+        private String firstName; // Not required
+        private String lastName; // Not required
+        private String email;
+        private String password;
+
+        // Required fields only
+        UserRegisterTask(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+
+        UserRegisterTask(String firstName, String email, String password) {
+            this.firstName = firstName;
+            this.email = email;
+            this.password = password;
+        }
+
+        // Constructor with all optional fields
+        UserRegisterTask(String firstName, String lastName, String email, String password) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.email = email;
+            this.password = password;
+        }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
