@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,8 +26,10 @@ public class CourseListActivity extends AppCompatActivity {
     private static String USER_EMAIL;
     private static int CWID;
 
-    // Arrays and Lists
+    // Class variables
     private CourseListTask fetchTask = null;
+    private CourseRegisterTask registerTask = null;
+
     private ArrayAdapter<String> courseAdapter;
     public ArrayList<String> fetchedCourse;
     public ArrayList<String> selectedCourse;
@@ -44,30 +49,27 @@ public class CourseListActivity extends AppCompatActivity {
         CWID = getIntent().getIntExtra("CWID", 0);
 
         // Initialize Arrays and Adapters
-        fetchedCourse = new ArrayList<String>();
-        selectedCourse = new ArrayList<String>();
-        courseAdapter = new ArrayAdapter<String>(this, R.layout.course_item, R.id.courseItem, fetchedCourse);
+        fetchedCourse = new ArrayList<String>(); // Holds courses that you can take
+        selectedCourse = new ArrayList<String>(); // Holds courses you want to add
+        courseAdapter = new ArrayAdapter<String>(this, R.layout.course_choice, R.id.courseChoice, fetchedCourse);
 
         // Initialize UI elements
         courseListView = (ListView) findViewById(R.id.completeCourseList);
         courseListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         courseListView.setAdapter(courseAdapter);
 
-        // OnClickListeners for bottom menu buttons
+        // Populate the course list
+        fetchTask = new CourseListTask(CWID);
+        fetchTask.execute();
+
+        // OnClickListeners for buttons and list items
         btnConfirm = (Button) findViewById(R.id.confirm_button);
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
-                intent.putExtra("UserEmail", USER_EMAIL);
-                intent.putExtra("CWID", CWID);
-                startActivity(intent);
-            }
-        });
-        btnCancel = (Button) findViewById(R.id.cancel_button);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                // Add the selected courses to the users course list
+                attemptRegister();
+
                 Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
                 intent.putExtra("UserEmail", USER_EMAIL);
                 intent.putExtra("CWID", CWID);
@@ -75,8 +77,106 @@ public class CourseListActivity extends AppCompatActivity {
             }
         });
 
-        fetchTask = new CourseListTask(CWID);
-        fetchTask.execute();
+        btnCancel = (Button) findViewById(R.id.cancel_button);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Should clear out the array of any selected items
+                selectedCourse.clear();
+
+                Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
+                intent.putExtra("UserEmail", USER_EMAIL);
+                intent.putExtra("CWID", CWID);
+                startActivity(intent);
+            }
+        });
+
+        courseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Capture user selection
+                String selectedItem = ((TextView)view).getText().toString();
+
+                // Determine if the item is not checked
+                // If so, toggle the check mark (check)
+                if (!selectedCourse.contains(selectedItem)) {
+                    selectedCourse.add(selectedItem);
+                } else {
+                    // Otherwise, toggle the check mark off
+                    selectedCourse.remove(selectedItem);
+                }
+            }
+        });
+    }
+
+    private void attemptRegister() {
+        if (registerTask != null) {
+            return;
+        }
+
+        // TODO: add course selection validation according to new business rules
+        // For now, courses are not validated to allow flexibility.
+        // For example, a student could enter with pre-existing credit or
+        // test out of a course and not take the prerequisite. In a future version,
+        // more complex course validation can be added.
+
+        registerTask = new CourseRegisterTask(CWID, selectedCourse);
+        registerTask.execute();
+    }
+
+    public class CourseRegisterTask extends AsyncTask<Void, Void, Boolean> {
+
+        private ArrayList<String> courses;
+        private int cwid;
+
+        CourseRegisterTask(int cwid, ArrayList<String> courses) {
+            this.courses = courses;
+            this.cwid = cwid;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try {
+                Connection connection = connection();
+                if (connection == null) {
+                    return false;
+                } else {
+                    // Iterate through the list of selected courses
+                    for (String course : courses) {
+                        // Parse out just the CourseID first
+                        course = course.substring(0, course.indexOf(" "));
+                        String sql = "INSERT INTO Student_Course (CWID, CourseID) " +
+                                "VALUES (" + cwid +
+                                ", '" + course + "');";
+                        connection.createStatement().executeUpdate(sql);
+                    }
+
+                    connection.close();
+                    return true;
+                }
+            } catch (Exception e) {
+                Log.e("Error ", e.getMessage());
+                return false;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            registerTask = null;
+            Intent intent = new Intent(CourseListActivity.this, NextCourseActivity.class);
+            intent.putExtra("UserEmail", USER_EMAIL);
+            intent.putExtra("CWID", CWID);
+
+            if (success) {
+                Toast.makeText(getApplicationContext(), "Courses added successfully", Toast.LENGTH_LONG).show();
+                finish();
+            } else {
+                Toast.makeText(getApplicationContext(), "Error encountered while adding courses", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            startActivity(intent);
+        }
     }
 
     /**
@@ -105,10 +205,7 @@ public class CourseListActivity extends AppCompatActivity {
                             "FROM Student_Course " +
                             "WHERE CWID = " + cwid + ");";
                     ResultSet resultSet = connection.createStatement().executeQuery(sql);
-
-                    // Read through resultSet
                     while (resultSet.next()) {
-                        // TODO: Update this or move it to a Course class later
                         // CourseID + " " + CourseName
                         String courseRow = resultSet.getString(1) + " " + resultSet.getString(2);
                         fetchedCourse.add(courseRow);

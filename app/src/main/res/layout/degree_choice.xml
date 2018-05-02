@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TextView
+<CheckedTextView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/courseItem"
+    android:id="@+id/degreeChoice"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:checkMark="?android:attr/listChoiceIndicatorSingle"
+    android:checkMarkTint="@color/colorPrimary"
     android:gravity="center_vertical"
     android:textSize="8pt"
     android:textColor="@color/colorPrimary" />

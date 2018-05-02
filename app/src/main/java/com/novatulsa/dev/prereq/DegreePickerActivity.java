@@ -52,13 +52,14 @@ public class DegreePickerActivity extends AppCompatActivity {
         // Initialize Arrays and Adapters
         fetchedDegree = new ArrayList<String>();
         selectedDegree = new ArrayList<String>();
-        degreeAdapter = new ArrayAdapter<String>(this, R.layout.degree_item, R.id.degreeItem, fetchedDegree);
+        degreeAdapter = new ArrayAdapter<String>(this, R.layout.degree_choice, R.id.degreeChoice, fetchedDegree);
 
         // Initialize UI elements
         degreeListView = (ListView) findViewById(R.id.degreeList);
         degreeListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         degreeListView.setAdapter(degreeAdapter);
 
+        // Populate the degree list
         fetchTask = new DegreeListTask();
         fetchTask.execute((Void) null);
 
@@ -66,7 +67,6 @@ public class DegreePickerActivity extends AppCompatActivity {
         degreeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 // Capture user selection
                 String selectedItem = ((TextView)view).getText().toString();
                 Log.e("Variable", selectedItem);
