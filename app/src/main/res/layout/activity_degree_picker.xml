@@ -31,34 +31,28 @@
             android:scaleType="centerInside" />
 
         <TextView
+            android:id="@+id/textView"
+            style="@style/Button"
+            android:gravity="left|center_vertical"
             android:text="Select a degree program:"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/textView"
-            android:textColor="@android:color/background_light"
-            android:textSize="18sp"
-            android:background="@drawable/button"
-            android:textStyle="normal|bold"
-            android:gravity="center_vertical"
-            android:paddingLeft="20dp" />
+            android:layout_height="wrap_content" />
 
         <ListView
+            android:id="@+id/degreeList"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:id="@+id/degreeList"
-            android:layout_marginVertical="10dp" />
+            android:scrollbarStyle="outsideOverlay"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
 
         <Button
+            android:id="@+id/btnNext"
             android:text="Next"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btnProgNext"
-            android:background="@drawable/button"
-            android:textColor="@android:color/background_light"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:layout_width="match_parent" />
+            style="@style/Button" />
 
     </LinearLayout>
 </RelativeLayout>

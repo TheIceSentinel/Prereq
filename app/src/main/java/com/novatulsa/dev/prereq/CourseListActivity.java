@@ -116,14 +116,12 @@ public class CourseListActivity extends AppCompatActivity {
 
                     // Close connection after data is read
                     connection.close();
+                    return true;
                 }
             } catch (Exception e) {
                 Log.e("Error: ", e.getMessage());
                 return false;
             }
-
-            // Default return of false
-            return false;
         }
 
         @Override
@@ -132,7 +130,6 @@ public class CourseListActivity extends AppCompatActivity {
             fetchTask = null;
 
             if (success) {
-                finish();
                 courseAdapter.notifyDataSetChanged();
             }
         }

@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- Edited by James Doty on 4/8/2018 -->
-
-<!-- TODO: Simplify attribute and extract hard-coded strings
-     TODO: Convert to ConstraintLayout -->
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".CourseListActivity"
     android:id="@+id/activity_course_list"
@@ -18,13 +12,6 @@
     android:background="@android:color/background_light"
     android:weightSum="1"
     android:gravity="center">
-
-    <!--<ImageView-->
-        <!--android:id="@+id/imgLogo"-->
-        <!--android:layout_width="64dp"-->
-        <!--android:layout_height="64dp"-->
-        <!--app:srcCompat="@drawable/osu"-->
-        <!--tools:ignore="contentDescription" />-->
 
     <TextView
         android:id="@+id/txtListHeader"
