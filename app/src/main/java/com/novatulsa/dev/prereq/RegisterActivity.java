@@ -201,30 +201,30 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (!TextUtils.isEmpty(firstName) && !TextUtils.isEmpty(lastName)) {
                     // All fields provided
                     String sql = "INSERT INTO Student (Email, Password, FirstName, LastName) " +
-                            "VALUES (" + email +
-                            ", " + password +
-                            ", " + firstName +
-                            ", " + lastName +
-                            ");";
+                            "VALUES ('" + email +
+                            "', '" + password +
+                            "', '" + firstName +
+                            "', '" + lastName +
+                            "');";
                     connection.createStatement().executeUpdate(sql);
                     connection.close();
                     return true;
                 } else if (!TextUtils.isEmpty(firstName) && TextUtils.isEmpty(lastName)) {
                     // No last name provided
                     String sql = "INSERT INTO Student (Email, Password, FirstName) " +
-                            "VALUES (" + email +
-                            ", " + password +
-                            ", " + firstName +
-                            ");";
+                            "VALUES ('" + email +
+                            "', '" + password +
+                            "', '" + firstName +
+                            "');";
                     connection.createStatement().executeUpdate(sql);
                     connection.close();
                     return true;
                 } else {
                     // Default (no names provided)
                     String sql = "INSERT INTO Student (Email, Password) " +
-                            "VALUES (" + email +
-                            ", " + password +
-                            ");";
+                            "VALUES ('" + email +
+                            "', '" + password +
+                            "');";
                     connection.createStatement().executeUpdate(sql);
                     connection.close();
                     return true;

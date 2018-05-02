@@ -15,65 +15,100 @@
     android:padding="10dp"
     tools:context=".RegisterActivity">
 
-    <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        app:srcCompat="@drawable/osu" />
-
-    <EditText
-        android:id="@+id/firstName"
-        style="@style/InputField"
+    <ScrollView
+        android:id="@+id/register_form"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="First Name"
-        android:inputType="textPersonName" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/lastName"
-        style="@style/InputField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Last Name"
-        android:inputType="textPersonName" />
+        <LinearLayout
+            android:id="@+id/email_register_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/email"
-        style="@style/InputField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_email"
-        android:inputType="textEmailAddress" />
+            <ImageView
+            android:id="@+id/imgLogo"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/osu" />
 
-    <EditText
-        android:id="@+id/createPass"
-        style="@style/InputField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_create_pass"
-        android:inputType="textPassword" />
 
-    <EditText
-        android:id="@+id/confirmPass"
-        style="@style/InputField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/prompt_confirm_pass"
-        android:inputType="textPassword" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/firstName"
+                    style="@style/InputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First Name"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/sign_up_button"
-        style="?android:textAppearanceInverse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button"
-        android:onClick="onSignUpClick"
-        android:text="@string/action_sign_up"
-        android:textSize="8pt"
-        android:textStyle="bold" />
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/lastName"
+                    style="@style/InputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Last Name"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/email"
+                    style="@style/InputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_email"
+                    android:inputType="textEmailAddress" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/createPass"
+                    style="@style/InputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_create_pass"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <EditText
+                    android:id="@+id/confirmPass"
+                    style="@style/InputField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/prompt_confirm_pass"
+                    android:inputType="textPassword" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/sign_up_button"
+                style="?android:textAppearanceInverse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button"
+                android:onClick="onSignUpClick"
+                android:text="@string/action_sign_up"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
