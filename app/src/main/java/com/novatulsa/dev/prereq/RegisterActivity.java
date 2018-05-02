@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -152,12 +153,11 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean isPasswordValid(String password) {
-        // TODO: make it allow any characters between
+        Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{4,}$");
+        Boolean passwordTest = pattern.matcher(password).matches();
         return (password.length() >= 8
-                && password.length() <= 25);
-//                && password.matches("(.*[a-z])")
-//                && password.matches("(?=.*[A-Z])")
-//                && password.matches("(?=.*[0-9])"));
+                && password.length() <= 25
+                && passwordTest);
     }
 
     private boolean isNameValid(String name) {

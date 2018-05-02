@@ -38,6 +38,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -212,12 +213,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isPasswordValid(String password) {
-        // Replace this with your own logic
+        Pattern pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{4,}$");
+        Boolean passwordTest = pattern.matcher(password).matches();
         return (password.length() >= 8
-                && password.length() <= 25);
-//                && password.matches("[a-z]+")
-//                && password.matches("[A-Z]+")
-//                && password.matches("[0-9]+"));
+                && password.length() <= 25
+                && passwordTest);
     }
 
     /**
