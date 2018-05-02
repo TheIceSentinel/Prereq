@@ -47,16 +47,22 @@
 
         <Button
             android:id="@+id/confirm_button"
-            android:layout_width="56dp"
-            android:layout_height="wrap_content"
-            android:text="Y"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/ic_confirm"
+            android:backgroundTint="#FFFFFF"
             android:gravity="center" />
 
         <Button
             android:id="@+id/cancel_button"
-            android:layout_width="56dp"
-            android:layout_height="wrap_content"
-            android:text="N"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/ic_cancel"
+            android:backgroundTint="#FFFFFF"
             android:gravity="center" />
 
     </LinearLayout>
